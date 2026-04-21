@@ -6,6 +6,14 @@ app.use(express.json());
 
 let tarefas = [];
 
+// NOVA ROTA RAIZ
+app.get("/", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "API de tarefas funcionando"
+  });
+});
+
 app.get("/tarefas", (req, res) => {
   res.json(tarefas);
 });

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const urlBase = "https://SUA-URL-DO-BACKEND.vercel.app/tarefas";
+const urlBase = "https://tarefas-api-express-migracao.vercel.app/tarefas";
 
 const headersJson = {
   "Content-Type": "application/json",
