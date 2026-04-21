@@ -1,20 +1,14 @@
 import axios from "axios";
 
-const urlBase = "https://parseapi.back4app.com/classes/Tarefa";
-
-const headers = {
-  "X-Parse-Application-Id": "71lfFmyS54YIYmcO8l6Wq0o3FwpuJK8mME9XGAdv",
-  "X-Parse-JavaScript-Key": "mr2uSLqEjmrLD29pOYEQn67IsGF5mPA4pkf4hLwn",
-};
+const urlBase = "https://SEU-BACKEND.vercel.app/tarefas";
 
 const headersJson = {
-  ...headers,
   "Content-Type": "application/json",
 };
 
 export async function getTarefas() {
-  const response = await axios.get(urlBase, { headers });
-  return response.data.results;
+  const response = await axios.get(urlBase);
+  return response.data;
 }
 
 export async function adicionarTarefa(novaTarefa) {
@@ -34,8 +28,6 @@ export async function atualizarTarefa(objectId, dadosAtualizados) {
 }
 
 export async function deletarTarefa(objectId) {
-  const response = await axios.delete(`${urlBase}/${objectId}`, {
-    headers,
-  });
+  const response = await axios.delete(`${urlBase}/${objectId}`);
   return response.data;
 }
