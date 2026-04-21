@@ -1,40 +1,74 @@
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { View, Text, TextInput, Button, FlatList } from "react-native";
 
-const urlBase = "https://tarefas-api-express-migracao.vercel.app/tarefas";
+import {
+  getTarefas,
+  adicionarTarefa,
+  deletarTarefa,
+} from "../../api";
 
-const headersJson = {
-  "Content-Type": "application/json",
-};
+export default function Tarefas() {
+  const [tarefas, setTarefas] = useState([]);
+  const [descricao, setDescricao] = useState("");
 
-function normalizarTarefa(tarefa) {
-  return {
-    ...tarefa,
-    objectId: tarefa.objectId ?? tarefa.id,
-  };
-}
+  async function carregarTarefas() {
+    const dados = await getTarefas();
+    setTarefas(dados);
+  }
 
-export async function getTarefas() {
-  const response = await axios.get(urlBase);
-  return response.data.map(normalizarTarefa);
-}
+  async function handleAdicionar() {
+    if (!descricao) return;
 
-export async function adicionarTarefa(novaTarefa) {
-  const response = await axios.post(
-    urlBase,
-    { ...novaTarefa, concluida: false },
-    { headers: headersJson }
+    await adicionarTarefa({ descricao });
+    setDescricao("");
+    carregarTarefas();
+  }
+
+  async function handleDeletar(id) {
+    await deletarTarefa(id);
+    carregarTarefas();
+  }
+
+  useEffect(() => {
+    carregarTarefas();
+  }, []);
+
+  return (
+    <View style={{ padding: 20 }}>
+      <Text style={{ fontSize: 20, marginBottom: 10 }}>Tarefas</Text>
+
+      <TextInput
+        placeholder="Digite uma tarefa"
+        value={descricao}
+        onChangeText={setDescricao}
+        style={{
+          borderWidth: 1,
+          marginBottom: 10,
+          padding: 8,
+        }}
+      />
+
+      <Button title="Adicionar" onPress={handleAdicionar} />
+
+      <FlatList
+        data={tarefas}
+        keyExtractor={(item) => item.objectId.toString()}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              marginTop: 10,
+              padding: 10,
+              borderWidth: 1,
+            }}
+          >
+            <Text>{item.descricao}</Text>
+            <Button
+              title="Excluir"
+              onPress={() => handleDeletar(item.objectId)}
+            />
+          </View>
+        )}
+      />
+    </View>
   );
-  return normalizarTarefa(response.data);
-}
-
-export async function atualizarTarefa(objectId, dadosAtualizados) {
-  const response = await axios.put(`${urlBase}/${objectId}`, dadosAtualizados, {
-    headers: headersJson,
-  });
-  return normalizarTarefa(response.data);
-}
-
-export async function deletarTarefa(objectId) {
-  const response = await axios.delete(`${urlBase}/${objectId}`);
-  return response.data;
 }

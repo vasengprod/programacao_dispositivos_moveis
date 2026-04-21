@@ -6,9 +6,18 @@ const headersJson = {
   "Content-Type": "application/json",
 };
 
+function normalizarTarefa(tarefa) {
+  return {
+    ...tarefa,
+    objectId: tarefa.objectId ?? tarefa.id,
+  };
+}
+
 export async function getTarefas() {
   const response = await axios.get(urlBase);
-  return response.data;
+  return Array.isArray(response.data)
+    ? response.data.map(normalizarTarefa)
+    : [];
 }
 
 export async function adicionarTarefa(novaTarefa) {
@@ -17,14 +26,14 @@ export async function adicionarTarefa(novaTarefa) {
     { ...novaTarefa, concluida: false },
     { headers: headersJson }
   );
-  return response.data;
+  return normalizarTarefa(response.data);
 }
 
 export async function atualizarTarefa(objectId, dadosAtualizados) {
   const response = await axios.put(`${urlBase}/${objectId}`, dadosAtualizados, {
     headers: headersJson,
   });
-  return response.data;
+  return normalizarTarefa(response.data);
 }
 
 export async function deletarTarefa(objectId) {
