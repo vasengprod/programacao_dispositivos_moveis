@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "expo-01",
-    "slug": "expo-01",
+    "name": "tarefas-backend-neon",
+    "slug": "tarefas-backend-neon",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "expo01",
+    "scheme": "tarefasbackendneon",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
